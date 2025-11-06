@@ -123,7 +123,7 @@ tasks.register<ProGuardTask>("proguardJar") {
     } else {
         val jmods = file("$javaHome/jmods")
         if (jmods.exists()) {
-            libjarsjars(fileTree(jmods).matching { include("**/*.jmod") })
+            libraryjars(fileTree(jmods).matching { include("**/*.jmod") })
         }
     }
 
