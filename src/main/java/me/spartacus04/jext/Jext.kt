@@ -40,6 +40,8 @@ import me.spartacus04.jext.webapi.JextWebServer
  */
 @Suppress("unused")
 class Jext : ColosseumPlugin() {
+    private var webServerInstance: JextWebServer? = null
+    
     override fun onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
         PacketEvents.getAPI().load()
@@ -55,7 +57,11 @@ class Jext : ColosseumPlugin() {
     }
 
     override fun onDisable() {
-        webServer.stop()
+        try {
+            webServerInstance?.stop()
+        } catch (e: Exception) {
+            logger.warning("Error stopping web server: ${e.message}")
+        }
         colosseumLogger.warn(DISABLED_MESSAGE)
     }
 
@@ -128,7 +134,12 @@ class Jext : ColosseumPlugin() {
         get() = PermissionsIntegrationManager()
 
     val webServer: JextWebServer
-        get() = JextWebServer(this)
+        get() {
+            if (webServerInstance == null) {
+                webServerInstance = JextWebServer(this)
+            }
+            return webServerInstance!!
+        }
 
     val geyserManager: GeyserManager
         get() = GeyserManager()

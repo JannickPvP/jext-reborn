@@ -3,6 +3,11 @@
     public static void main(java.lang.String[]);
 }
 
+# Keep all resource files including plugin.yml
+-keepdirectories
+-adaptresourcefilenames **.properties,**.yml,**.yaml,**.json
+-adaptresourcefilecontents **.properties,META-INF/MANIFEST.MF
+
 -dontwarn net.minecraft.**
 -dontwarn okio.**
 -dontwarn okhttp3.**

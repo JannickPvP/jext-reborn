@@ -44,6 +44,11 @@ class JextWebServer(private val plugin: Jext) {
     }
 
     private fun start() {
+        // Check if plugin is enabled before starting
+        if (!plugin.isEnabled) {
+            return
+        }
+
         plugin.scheduler.runTaskAsynchronously {
             scope = CoroutineScope(Dispatchers.Default).launch {
                 if(server != null) return@launch
@@ -141,11 +146,15 @@ class JextWebServer(private val plugin: Jext) {
     }
 
     fun stop() {
-        server?.stop(0)
-        server = null
-        runBlocking {
-            scope?.cancelAndJoin()
+        try {
+            server?.stop(0)
+            server = null
+            runBlocking {
+                scope?.cancelAndJoin()
+            }
+            plugin.colosseumLogger.warn(WEBSERVER_STOPPED)
+        } catch (e: Exception) {
+            plugin.logger.warning("Error stopping web server: ${e.message}")
         }
-        plugin.colosseumLogger.warn(WEBSERVER_STOPPED)
     }
 }

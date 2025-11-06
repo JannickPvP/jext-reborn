@@ -123,11 +123,15 @@ tasks.register<ProGuardTask>("proguardJar") {
     } else {
         val jmods = file("$javaHome/jmods")
         if (jmods.exists()) {
-            libraryjars(fileTree(jmods).matching { include("**/*.jmod") })
+            libjarsjars(fileTree(jmods).matching { include("**/*.jmod") })
         }
     }
 
     configuration("proguard-rules.pro")
+    
+    // Preserve all resource files
+    dontshrink()
+    dontoptimize()
 
     outjars("build/libs/${rootProject.name}_${project.version}.jar")
 }
